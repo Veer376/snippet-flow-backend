@@ -1,0 +1,28 @@
+services:
+  # server:
+  #   container_name: snippet-flow-server
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "8000:8000"
+  #   volumes:
+  #     - .:/app
+  #   environment:
+  #     - DATABASE_URL=postgresql://username:password@db:5432/snippet-flow-db
+  #   depends_on:
+  #     - db
+  db:
+    image: postgres
+    container_name: snippet-flow-db
+    environment:
+      POSTGRES_USER: username
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: snippet-flow-db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
