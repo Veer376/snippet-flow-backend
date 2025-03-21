@@ -7,6 +7,11 @@ class UserInDB(User):
     hashed_password: str
 
 class Interaction(BaseModel):
-    userid: int
-    snippetid: int
+    user_id: int
+    snippet_id: int
     rating: int
+
+class Snippet(BaseModel):
+    text: str
+    author: str | None
+    

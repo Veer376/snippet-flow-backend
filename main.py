@@ -1,10 +1,10 @@
 import fastapi
-import model 
 from snippet.route import snippet_router
 from database import Base, engine
+import model
 app = fastapi.FastAPI()
 
-Base.metadata.drop_all(bing=engine)
+# Base.metadata.drop_all(bind=engine) # will not work if you have foreign key constraints
 Base.metadata.create_all(bind=engine)
 
 print('hello')
