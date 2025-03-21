@@ -18,9 +18,6 @@ Here is the fronend :
 # 1. Clone the repository
 git clone <repo-name>
 
-# 2. Navigate to the backend directory
-cd backend
-
 # 3. Start Docker containers in the background
 docker compose up -d
 
@@ -53,17 +50,15 @@ uvicorn main:app --reload
 ```
 ---
 
-### **Chunk 3: Configuration, Features, Contributing**
+### Configuration**
 
 ```markdown
-## :wrench: Configuration
-
 ### Environment Variables
 
 Create a `.env` file or set `DATABASE_URL` in your environment to point to your database.  
 **Example:**
 ```bash
-DATABASE_URL=postgresql://user:password@localhost:5432/snippet_db
+DATABASE_URL=postgresql://user_name:user_password@localhost:5432/db_name
 ```
 
 # :sparkles: Features
