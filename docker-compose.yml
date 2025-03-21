@@ -13,7 +13,7 @@ services:
   #   depends_on:
   #     - db
   db:
-    image: postgres
+    image: ankane/pgvector
     container_name: snippet-flow-db
     environment:
       POSTGRES_USER: username
