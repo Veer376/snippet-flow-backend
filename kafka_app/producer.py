@@ -1,6 +1,6 @@
 from confluent_kafka import Producer
 
-BROKER = "localhost:9092"
+BROKER = "kafka:9092"
 
 producer = Producer({"bootstrap.servers": BROKER})
 

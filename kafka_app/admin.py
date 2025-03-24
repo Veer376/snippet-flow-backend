@@ -1,6 +1,6 @@
-from confluent_kafka.admin import AdminClient, NewTopic
+from confluent_kafka import AdminClient, NewTopic
 
-BROKER = "localhost:9092"  # Change to your Kafka broker address
+BROKER = "kafka:9092"  # Change to your Kafka broker address
 TOPIC = "new-snippet"         # Change to your desired topic name
 
 admin_client = AdminClient({"bootstrap.servers": BROKER})
