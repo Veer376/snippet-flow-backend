@@ -15,14 +15,6 @@ conf = {
 consumer = Consumer(conf)
 consumer.subscribe([TOPIC])
 
-def consume(msg):
-    """
-    Send snippet to FastAPI using an HTTP request
-    """
-    print('inside the consume function')
-    
-
-
 try:
     while True:
         msg = consumer.poll(timeout=1.0)
@@ -39,16 +31,3 @@ try:
 
 except KeyboardInterrupt:
     print("Shutting down consumer...")
-
-
-# async def consume(snippet: dict):
-#     """
-#     Send snippet to FastAPI using an async HTTP request
-#     """
-#     async with httpx.AsyncClient() as client:
-#         response = await client.post(
-#             "http://fastapi:8000/snippet/consume",
-#             json=snippet,
-#             timeout=10.0
-#         )
-#         return response.json()
