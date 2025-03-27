@@ -9,7 +9,10 @@ services:
     volumes:
       - .:/app # mount the current directory to /app in the container so that changes in the host are reflected in the container and we don't have to rebuild the image
     environment:
-      - DATABASE_URL=postgresql://username:password@postgres:5432/snippet-flow-db
+      - WATCHFILES_FORCE_POLLING = 1
+      - DATABASE_URL = postgresql://username:password@postgres:5432/snippet-flow-db # directly send the url to the container
+      - EMBEDDING_DIMS = 768
+      - BOOTSTRAP_SERVERS = kafka:9092
     depends_on:
       - postgres
       - kafka
@@ -62,7 +65,7 @@ services:
       - ./kafka_app/consumer:/app
     command: ["python", "consumer.py"]
     environment:
-      - BOOTSTRAP_SERVICE=kafka:9092
+      - BOOTSTRAP_SERVERS=kafka:9092
     
 
 volumes:
