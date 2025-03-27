@@ -9,22 +9,23 @@ from sqlalchemy.orm import sessionmaker, relationship
 from pgvector.sqlalchemy import Vector
 from database import Base, engine
 
-load_dotenv()
+
 
 class Snippet(Base):
     __tablename__ = 'snippet'
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     text = Column(String, nullable=False)
     author = Column(String)
-    hasEmbedding = Column(Boolean, default=False)
     interactions = relationship("UserSnippetInteraction", back_populates="snippet")
     snippet_embedding = relationship("SnippetEmbedding", back_populates="snippet")
+
+dimention = int(os.getenv('EMBEDDING_DIMS', 768))
 
 class SnippetEmbedding(Base):
     __tablename__ = 'snippet_embedding'
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     snippet_id = Column(Integer, ForeignKey('snippet.id'), nullable=False)
-    embedding = Column(Vector(768), nullable=False)
+    embedding = Column(Vector(dimention), nullable=False)
     snippet = relationship("Snippet", back_populates="snippet_embedding")
 
 class User(Base):
