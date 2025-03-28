@@ -16,6 +16,7 @@ Snippet-flow is the personalised book exerpt recommendations system. Users can p
 5. Docker for containerized microservices architecture, including FastAPI, Kafka, Kafka Consumer, ZooKeeper, and PostgreSQL services.
 
 ## Architecture
+Boxes in blue are microservices running on Docker.
 ![ScreenShot](./assests/image.png)
 
 
@@ -43,6 +44,7 @@ Rates an existing snppet
 }
 ```
 #### POST `/snippet/get`
+Get 10 personalised quote recommedations 
 ```json
 {
     "user_id" : 1,
@@ -50,6 +52,7 @@ Rates an existing snppet
 }
 ```
 #### POST `/snippet/consume`
+For consumer to consume.
 ```bash
 # this endpoint is for the consumer, consumer calls this endpoint to generate embeddings and save them in pgvector.
 ```
@@ -81,6 +84,7 @@ Rates an existing snppet
 docker exec -it postgres bash
 psql -U username -d snippet-flow-db
 CREATE EXTENSION vector;
+\dx # check extension.
 ```
 
 ## Next Steps
