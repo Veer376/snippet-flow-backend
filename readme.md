@@ -1,43 +1,91 @@
 # Snippet Flow :sparkles:
+- [Overview](#Overview)
+- [Architecture](#architecture)
+- [Quick Start](#whale-quick-start)
+- [Endpoints](#endpoints)
+- [Database Schema](#-database-schema)
+- [Troubleshooting](#troubleshooting)
+- [Next Steps](#next-steps)
 
-Snippet-flow is the personalised book exerpts recommendation system. 
-1. It utilized the fastapi for the API endpoint for getting the recommedations, saving the book exerpts
-2. Event driven Architecture for generating the embeddings for newly added snippets using kafka
-3. Microservices architecture using Docker compose. 
-Services : fastapi server, kafka, zookeeper, kafka_consumer, postgres DB.
+## Overview
+Snippet-flow is the personalised book exerpt recommendations system. Users can publish their favorite book exerpt or quotes and get the recommemdations based on the liked snippets. It Uses ...
+1. PostgreSQL to manage relational data between users, snippets, their interactions, and embedding tables.
+2. pgvector extension to store vector embeddings in PostgreSQL and perform approximate nearest neighbor searches using L2 distance metrics.
+3. AWS Bedrock to generate high-quality vector embeddings from text content.
+4. Apache Kafka for event-driven architecture, enabling real-time user experiences. A dedicated consumer service continuously monitors the "new-snippet" topic, generates embeddings, and persists them to PostgreSQL via the '/consume' endpoint. Endpoint is used as the consumer is running as the separate service.
+5. Docker for containerized microservices architecture, including FastAPI, Kafka, Kafka Consumer, ZooKeeper, and PostgreSQL services.
 
-## :rocket: Quick Start
+## Architecture
+![ScreenShot](./assests/image.png)
 
-## Prerequisites
-- Docker
----
 
-### :whale: Using Docker Compose
+## :whale: Quick Start
 ```bash
-# 1. Clone the repository
 git clone <repo-name>
-
-docker compose up -d
-## Sit back, relax and cross your fingers. Everything should work without errors
-# to checks the logs for each of the services or all.
-docker compose logs -f service
+docker compose up # Sit back, relax and cross your fingers. Everything should work without errors.
 ```
----
-### Finally
+## Endpoints
+#### POST `/snippet/publish`
+Publishes a new snippet
+```json
+{
+  "text": "To be or not to be, that is the question",
+  "author": "William Shakespeare"
+}
+```
+#### POST `/snippet/rating`
+Rates an existing snppet
+```json
+{
+    "user_id" : 1,
+    "snippet_id" : 1,
+    "rating" : 1 // 1->like, -1->dislike
+}
+```
+#### POST `/snippet/get`
+```json
+{
+    "user_id" : 1,
+    "email" : "@example.com"
+}
+```
+#### POST `/snippet/consume`
 ```bash
-# we are using the postgres image which has preinstalled pgvector, we need to add the extension to the every database we will use. 
-# Although init.sql file may do this, if not, then try this.
-docker exec -it snippet-flow-db bash 
-psql -U username -d snippet-flow-db
-
-\dx # check the extensions
-create extension vector
-\dx # check again.
+# this endpoint is for the consumer, consumer calls this endpoint to generate embeddings and save them in pgvector.
 ```
 
-## :sparkles: Features
-FastAPI for high-performance Python web serving
-PostgreSQL for robust relational storage
-Docker for containerized deployment (optional)
-User & Snippet Management with minimal endpoints
-Optional Virtual Environment for local Python dev
+## 💾 Database Schema
+
+### Tables
+- `snippet` - Stores text content and metadata
+- `user` - User information
+- `snippet_embedding` - Vector embeddings of snippets, Foreign Key: snippet_id
+- `usi` - User-Snippet Interactions (ratings). Foreign Keys: snippet_id, user_id.
+
+### Key Relationships
+- Each snippet can have one embedding
+- Users can have many interactions with snippets
+- Snippets can be rated by many users
+---
+
+## Environment Variables
+```bash
+# Don't you worry, its all there in docker-compose.yml
+```
+
+## ⚠️ Troubleshooting
+### Common Issues
+- **pgvector extension missing**: Run `CREATE EXTENSION vector;` in your PostgreSQL database using the commands.
+```bash
+# postgres service must be running.
+docker exec -it postgres bash
+psql -U username -d snippet-flow-db
+CREATE EXTENSION vector;
+```
+
+## Next Steps
+1. Replace pgvector with OpenSearch to improve recommendation speed and scalability
+2. implement /auth endpoints.
+3. Develop a user-friendly frontend interface.
+4. Deploy the microservices architecture.
+5. Implement Apache Airflow to schedule periodic recommendation and manage producer as independent service.
