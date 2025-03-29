@@ -14,7 +14,7 @@ class Interaction(BaseModel): # /rating
     rating: int
 
 class Snippet(BaseModel): # /publish & /consume
-    id: str|None = None 
+    id: int|None = None 
     text: str
     author: str|None = None
     
