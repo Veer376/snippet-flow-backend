@@ -17,7 +17,7 @@ services:
       - postgres
       - kafka
   postgres:
-    image: ankane/pgvector # postgres with pgvector extension
+    image: postgres:17
     container_name: postgres
     environment:
       POSTGRES_USER: username
@@ -65,7 +65,31 @@ services:
     command: ["python", "consumer.py"]
     environment:
       - BOOTSTRAP_SERVERS=kafka:9092
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.11.3
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false  # Disable security for local development
+    ports:
+      - "9200:9200" 
+      - "9300:9300"
+    volumes:
+      - esdata:/usr/share/elasticsearch/data
+    restart: always
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.11.3
+    container_name: kibana
+    depends_on:
+      - elasticsearch
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    ports:
+      - "5601:5601" 
+    restart: always
     
 
 volumes:
   postgres_data:
+  esdata: # this is the volume for elasticsearch, 
+    driver: local # and this is the driver for the volume, this is not necessary but it is good to have
