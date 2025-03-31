@@ -2,6 +2,7 @@ import os
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
+from elasticsearch import Elasticsearch
 
 DATABASE_URL = os.getenv('DATABASE_URL', "postgresql://username:password@postgres:5432/snippet-flow-db")
 
@@ -16,5 +17,10 @@ engine = create_engine(
 # Create a session factory
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-# Base class for declarative models
 Base = declarative_base()
+
+
+
+# Elasticsearch client
+es_client = Elasticsearch("http://elasticsearch:9200")
+
