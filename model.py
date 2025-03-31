@@ -19,7 +19,7 @@ class Snippet(Base):
     interactions = relationship("UserSnippetInteraction", back_populates="snippet")
     snippet_embedding = relationship("SnippetEmbedding", back_populates="snippet")
 
-dimention = int(os.getenv('EMBEDDING_DIMS', 768))
+dimention = int(os.getenv('EMBEDDING_DIMS', 1024))
 
 class SnippetEmbedding(Base):
     __tablename__ = 'snippet_embedding'
