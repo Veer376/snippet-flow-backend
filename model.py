@@ -6,9 +6,7 @@ from dotenv import load_dotenv
 from sqlalchemy import create_engine, Column, Integer, String, Boolean, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship 
-from pgvector.sqlalchemy import Vector
-from database import Base, engine
-
+from database import Base, es_client
 
 
 class Snippet(Base):
@@ -18,15 +16,6 @@ class Snippet(Base):
     author = Column(String)
     interactions = relationship("UserSnippetInteraction", back_populates="snippet")
     snippet_embedding = relationship("SnippetEmbedding", back_populates="snippet")
-
-dimention = int(os.getenv('EMBEDDING_DIMS', 768))
-
-class SnippetEmbedding(Base):
-    __tablename__ = 'snippet_embedding'
-    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
-    snippet_id = Column(Integer, ForeignKey('snippet.id'), nullable=False)
-    embedding = Column(Vector(dimention), nullable=False)
-    snippet = relationship("Snippet", back_populates="snippet_embedding")
 
 class User(Base):
     __tablename__ = 'user'
@@ -44,5 +33,31 @@ class UserSnippetInteraction(Base):
     user = relationship("User", back_populates="interactions")
     snippet = relationship("Snippet", back_populates="interactions")
 
+"""
+elasticsearch: 
 
+snippet_embedding {
+    "snippet_id" : 1,
+    "embedding" : [0.1, 0.2, 0.3, ...]
+    "text" : "this is the snippet" # we need this to avoid making one extra query to the postgres.
+}
+"""
+response = es_client.indices.create(
+    index="snippet_embedding",
+    body={
+        "mappings": {
+            "dynamic": False,
+            "properties": {
+                "snippet_id": {"type": "integer"},
+                "embedding": {"type": "dense_vector", "dims": 768},
+                "snippet": {
+                    "properties": {
+                        "text": {"type": "text"},
+                        "author": {"type": "text"}
+                    }
+                }
+            }
+        }
+    }
+)
 
