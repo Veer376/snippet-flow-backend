@@ -22,7 +22,7 @@ Boxes in blue are microservices running on Docker.
 
 ## :whale: Quick Start
 ```bash
-git clone <repo-name>
+git clone <current-page URL>
 docker compose up # Sit back, relax and cross your fingers. Everything should work without errors.
 ```
 ## Endpoints
@@ -88,7 +88,7 @@ CREATE EXTENSION vector;
 ```
 
 ## Next Steps
-1. Replace pgvector with OpenSearch to improve recommendation speed and scalability
+1. Replace pgvector with ElasticSearch to improve recommendation speed and scalability
 2. implement /auth endpoints.
 3. Develop a user-friendly frontend interface.
 4. Deploy the microservices architecture.
