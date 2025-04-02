@@ -49,7 +49,7 @@ response = es_client.indices.create(
             "dynamic": False,
             "properties": {
                 "snippet_id": {"type": "integer"},
-                "embedding": {"type": "dense_vector", "dims": 768, "index": True, "similarity": "cosine"},
+                "embedding": {"type": "dense_vector", "dims": 1024, "index": True, "similarity": "cosine"},
                 "snippet": {
                     "properties": {
                         "text": {"type": "text"},
