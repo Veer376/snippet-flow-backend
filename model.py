@@ -17,6 +17,8 @@ class Snippet(Base):
     interactions = relationship("UserSnippetInteraction", back_populates="snippet")
     snippet_embedding = relationship("SnippetEmbedding", back_populates="snippet")
 
+dimention = int(os.getenv('EMBEDDING_DIMS', 1024))
+
 class User(Base):
     __tablename__ = 'user'
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
@@ -49,7 +51,7 @@ response = es_client.indices.create(
             "dynamic": False,
             "properties": {
                 "snippet_id": {"type": "integer"},
-                "embedding": {"type": "dense_vector", "dims": 1024, "index": True, "similarity": "cosine"},
+                "embedding": {"type": "dense_vector", "dims": dimention, "index": True, "similarity": "cosine"},
                 "snippet": {
                     "properties": {
                         "text": {"type": "text"},
