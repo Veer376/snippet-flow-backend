@@ -6,7 +6,12 @@ from botocore.exceptions import ClientError
 
 embedding_dimentions = int(os.getenv('EMBEDDING_DIMS', 1024))
 
-def get_embeddings(text: str) -> list:
+def get_embeddings(text: str) -> np.ndarray:
+    # get the embeddings for the text for now we would use the random embeddings
+    embedding = np.random.rand(embedding_dimentions)
+    return embedding
+
+def get_embeddings_bedrock(text: str) -> list:
     """Get the embeddings for a given text using Amazon Bedrock."""
 
     brt = boto3.client("bedrock-runtime")
